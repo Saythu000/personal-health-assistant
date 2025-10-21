@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PHIA - Personal Health Insights Agent</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .chat-container {
+            height: 400px;
+            overflow-y: auto;
+        }
+        .metric-card {
+            transition: transform 0.2s;
+        }
+        .metric-card:hover {
+            transform: scale(1.05);
+        }
+        .loading {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .5; }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-purple-50">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-gray-800 mb-2">🏥 PHIA</h1>
+            <p class="text-xl text-gray-600">Personal Health Insights Agent</p>
+            <div class="flex justify-center items-center mt-2">
+                <div id="status-indicator" class="w-3 h-3 rounded-full mr-2 bg-green-500"></div>
+                <span class="text-sm text-gray-500">API Status: <span id="status-text">Connected</span></span>
+            </div>
+        </div>
+
+        <!-- Health Metrics Dashboard -->
+        <div class="mb-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">📊 Health Dashboard</h2>
+            <div id="health-metrics" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <!-- Loading placeholders -->
+                <div class="bg-white rounded-xl p-6 shadow-lg loading">
+                    <div class="h-8 bg-gray-200 rounded mb-2"></div>
+                    <div class="h-4 bg-gray-200 rounded"></div>
+                </div>
+                <div class="bg-white rounded-xl p-6 shadow-lg loading">
+                    <div class="h-8 bg-gray-200 rounded mb-2"></div>
+                    <div class="h-4 bg-gray-200 rounded"></div>
+                </div>
+                <div class="bg-white rounded-xl p-6 shadow-lg loading">
+                    <div class="h-8 bg-gray-200 rounded mb-2"></div>
+                    <div class="h-4 bg-gray-200 rounded"></div>
+                </div>
+                <div class="bg-white rounded-xl p-6 shadow-lg loading">
+                    <div class="h-8 bg-gray-200 rounded mb-2"></div>
+                    <div class="h-4 bg-gray-200 rounded"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Interface -->
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">💬 AI Health Assistant</h2>
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                <div class="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-4">
+                    <h3 class="text-xl font-bold flex items-center">
+                        🤖 PHIA Health Assistant
+                        <span id="thinking-indicator" class="ml-2 text-sm animate-pulse hidden">Thinking...</span>
+                    </h3>
+                </div>
+
+                <div id="chat-messages" class="chat-container p-4 space-y-4">
+                    <div class="flex justify-start">
+                        <div class="max-w-xs lg:max-w-md px-4 py-2 rounded-lg bg-gray-100 text-gray-800">
+                            <p class="text-sm">Hello! I'm PHIA, your Personal Health Insights Agent. I can analyze your health data and provide personalized recommendations. Try asking me about your sleep, exercise, or overall health!</p>
+                            <p class="text-xs opacity-70 mt-1" id="initial-time"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="suggested-questions" class="px-4 pb-4">
+                    <p class="text-sm text-gray-600 mb-2">Try asking:</p>
+                    <div class="flex flex-wrap gap-2">
+                        <button onclick="setMessage('How can I improve my sleep quality?')" class="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-full transition-colors">How can I improve my sleep quality?</button>
+                        <button onclick="setMessage('What\'s my heart rate trend?')" class="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-full transition-colors">What's my heart rate trend?</button>
+                        <button onclick="setMessage('Am I getting enough exercise?')" class="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-full transition-colors">Am I getting enough exercise?</button>
+                        <button onclick="setMessage('How can I reduce stress?')" class="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-full transition-colors">How can I reduce stress?</button>
+                    </div>
+                </div>
+
+                <div class="border-t p-4">
+                    <div class="flex space-x-2">
+                        <input type="text" id="message-input" placeholder="Ask me about your health..." 
+                               class="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                               onkeypress="handleKeyPress(event)">
+                        <button onclick="sendMessage()" id="send-button"
+                                class="bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 text-white px-6 py-2 rounded-lg transition-colors">
+                            Send
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="text-center mt-8 text-gray-500 text-sm">
+            <p>Powered by Google Gemini AI • Personal Health Insights Agent</p>
+            <p class="mt-1">Your health data is processed securely and privately</p>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
